@@ -1,0 +1,26 @@
+Questions about de code ex1.cpp
+
+line 74
+bool static_cond = false;
+what is the meaning of this condition?
+
+line 75
+bool pa = false;
+What is the role of this variable? "pa" is called in line 205 in order to solve the final linear system.
+
+line 76
+const char *device_config = "cpu";
+what is the meaning of this condition?
+
+line 78 
+bool algebraic_ceed = false;
+what is the role of algebraic_ceed? 
+
+line 81
+args.AddOption(&mesh_file, "-m", "--mesh","Mesh file to use.");
+are these strings different ways to call the mesh?
+
+lines 92
+#ifdef MFEM_USE_CEED
+this condition is necessary to input algebraic_ceed. What kind of condition is it?
+
