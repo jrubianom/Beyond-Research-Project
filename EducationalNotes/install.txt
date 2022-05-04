@@ -1,0 +1,56 @@
+See Readme and Install files in MFEM documentation.
+However, if you are not acquainted with downloading code from the source or if you
+have probems with spack, you can install this script written by my friend
+Carlos.
+
+Download the files CONFIG_MFEM, which contains:
+
+a file install.sh
+a file Makefile
+a directory code
+a file local_config.mk
+a hidden dir .objects
+
+Suppose that we are in Foo directory and we have the files of CONFIG_MFEM in Foo.
+
+mkdir mfem_dir
+cp sh install.sh mfem_dir
+cd mfem_dir
+sh install.sh
+
+After the installation you will find in mfem_dir/fem/build the installed library
+and compiled
+and in mfem_dir/fem/fem you will find all the source code.
+
+If you want to check, then run:
+make examples
+make miniapps
+make test
+
+
+///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+Now, you can create an other directory in which you could use mfem. Compile mfem
+requires a lot of flags. For that reason, it is useful to have a makefile that
+automatizes the compilation process.
+You can follow these instrucctions:
+
+cd Home/../Foo
+mkdir Work_dir
+mv code Makefile local_config.mk Work_dir
+mv .objects Work_dir
+cd Work_dir
+
+open the local_config.mk file and change thjis line with your corresponding path directory
+(in which you have installed MFEM):
+
+MFEM_INSTALL_DIR = /home../Foo/mfem_dir/mfem
+
+
+If you want to run some examples of MFEM in this directory, with the mesh of the
+examples, you will have to copy here (in Work_dir) the directory data (Which is
+in mfem_dir/fem/fem), and put the .cpp files in the dir code.
+
+Finally run, for example if the name of .cpp is foo.cpp:
+make file='foo'
