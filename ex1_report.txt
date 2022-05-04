@@ -24,3 +24,79 @@ lines 92
 #ifdef MFEM_USE_CEED
 this condition is necessary to input algebraic_ceed. What kind of condition is it?
 
+line 115
+Mesh mesh(mesh_file, 1, 1);
+what are second and third aguments representing?
+
+line 116
+int dim = mesh.Dimension();
+is the mesh dimension the dimension of the domain or the the number of functions in the solution space?
+theoretical question: is the given set V a basis for the solution space? is this the refering diimension?
+
+line 124
+(int)floor(log(50000./mesh.GetNE())/log(2.)/dim);
+mesh.GetNE (Returns number of elements.) it depends on mesh.NumOfElements
+it is counting the number of elements. How we can interpreted the formula for ref_levels
+
+line 131
+comment
+what is an isoparametric/isogeometric space?
+
+line 144
+fec = mesh.GetNodes()->OwnFEC();
+what is it doing?
+what type of object is mesh.GetNodes? is it a kind of boolean condition? (see line 142)
+
+line 155
+<< fespace.GetTrueVSize() << endl;
+theorical question: please clarify the concept of true dof.
+
+line 157
+comment
+are essential boundary dof the dofs associated to the independent dofs of the space functions which are not
+zero on the boundry.
+
+line 162
+Array<int> ess_tdof_list;
+what kind of array is it?
+
+line 162
+if (mesh.bdr_attributes.Size())
+what is the meaning of attribute in this context?
+the argument is related with a boolean concept?
+
+line 175
+b.Assemble();
+what does assemble do?
+
+line 180
+GridFunction x(&fespace);
+x=0.0;
+does x contained the linear combination coefficients?
+
+line 187 and 75
+if (pa) { a.SetAssemblyLevel(AssemblyLevel::PARTIAL); }
+what is the pa variable?
+
+line 190
+what is AMR and static condentation?
+
+line 209
+PCG(*A, M, B, X, 1, 200, 1e-12, 0.0);
+is M a matrix? if yes, is M=A (in the mathematical sense)? and are you implemented this in order to do a faster
+process?
+
+line 222
+if (algebraic_ceed)
+what is algebraic_ceed?
+
+line 247
+ofstream sol_ofs("sol.gf");
+what is the meaning of the extension .gf?
+
+
+
+
+
+
+
