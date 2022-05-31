@@ -72,3 +72,9 @@ Physical Curve("right", 4) = {2};
 Physical Curve("Ring", 5) = {5};
 //+
 Physical Surface("Wind",6) = {1};
+//+
+Mesh 2;
+//+
+Mesh.SurfaceFaces = 1;
+//+
+Mesh.Points = 1;
