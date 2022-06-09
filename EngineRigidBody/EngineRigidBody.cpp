@@ -10,8 +10,9 @@
 using namespace std;
 using namespace Eigen;
 
-void RigidBody::Init(double mass0, double Ix,double Iy, double Iz,VectorXd angles0,
-                     VectorXd w0){
+void RigidBody::Init(double mass0, double Ix,double Iy, double Iz,
+                     Vector3d angles0,Vector3d w0,
+                     Vector3d Accel0,  Vector3d Velocity0){
   mass = mass0;
   I(0) = Ix; I(1) = Iy; I(2) = Iz;
   w(0) = w0(0); w(1) = w0(1); w(2) = w0(2);
@@ -20,10 +21,14 @@ void RigidBody::Init(double mass0, double Ix,double Iy, double Iz,VectorXd angle
   q(1) = sin(0.5*theta0)*cos(0.5*(phi0-psi0));
   q(2) = sin(0.5*theta0)*sin(0.5*(phi0-psi0));
   q(3) = cos(0.5*theta0)*sin(0.5*(phi0+psi0));
+  Accel = Accel0;
+  Velocity = Velocity0;
+  UpdateA();
+  UpdateAinv();
 }
 
 void RigidBody::UpdateA(){
-  MatrixXd B = MatrixXd(3,3);
+  Matrix3d B; //= MatrixXd(3,3);
   B << q(0)*q(0) + q(1)*q(1)-q(2)*q(2)-q(3)*q(3) , 2*(q(1)*q(2) + q(0)*q(3)), 2*(q(1)*q(3) - q(0)*q(2)),
     2*(q(1)*q(2) - q(0)*q(3)), q(0)*q(0) - q(1)*q(1) + q(2)*q(2) - q(3)*q(3), 2*(q(2)*q(3) + q(0)*q(1)),
     2*(q(1)*q(3) + q(0)*q(2)), 2*(q(2)*q(3) - q(0)*q(1)), q(0)*q(0) - q(1)*q(1) - q(2)*q(2) + q(3)*q(3);
@@ -35,26 +40,26 @@ void RigidBody::UpdateAinv(){
     Ainv = A.inverse();
 }
 
-VectorXd RigidBody::GetVectorNIF(VectorXd &X){
+Vector3d RigidBody::GetVectorNIF(Vector3d X){
     return A * X;
 }
 
-VectorXd RigidBody::GetVectorIF(VectorXd &X){
+Vector3d RigidBody::GetVectorIF(Vector3d X){
     return Ainv * X;
 }
 
-void RigidBody::GetTorqueNIF(VectorXd &Tif){
+void RigidBody::GetTorqueNIF(Vector3d Tif){
     T = GetVectorNIF(Tif);
 }
 
 void RigidBody::UpdateRotational(double dt){
-  VectorXd q_before = VectorXd(4);
+  Vector4d q_before;
   q_before << q(0),q(1),q(2),q(3);
-  VectorXd w_before = VectorXd(3);
+  Vector3d w_before = VectorXd(3);
   w_before << w(0),w(1),w(2);
-  VectorXd wDot = VectorXd(3);
+  Vector3d wDot;
   //Matrix for updating quaternions
-  MatrixXd Q_w = MatrixXd(4,4);
+  Matrix4d Q_w;
   Q_w << 0,-w_before(0),-w_before(1),-w_before(2),
     w_before(0),0,w_before(2),-w_before(1),
     w_before(1),-w_before(2),0,w_before(0),
@@ -79,7 +84,7 @@ void RigidBody::UpdateRotational(double dt){
   OmegaDot = Ainv * wDot;
 }
 
-void RigidBody::GetForceIF(VectorXd Fif){
+void RigidBody::GetForceIF(Vector3d Fif){
   Force =  Fif;
 }
 
@@ -89,7 +94,7 @@ void RigidBody::UpdateTranslational(double dt){
 }
 
 
-void RigidBody::UpdateAll(double dt,VectorXd &Tif,VectorXd Fif){
+void RigidBody::UpdateAll(double dt,Vector3d Tif,Vector3d Fif){
   GetForceIF(Fif);
   UpdateTranslational(dt);
   GetTorqueNIF(Tif);
@@ -98,26 +103,36 @@ void RigidBody::UpdateAll(double dt,VectorXd &Tif,VectorXd Fif){
 
 //Get functions
 
-VectorXd RigidBody::getW(){
+Vector3d RigidBody::getW(){
     return w;
 }
 
-VectorXd RigidBody::getOmega(){
+Vector3d RigidBody::getOmega(){
   return Omega;
 }
 
-VectorXd RigidBody::getOmegaDot(){
+Vector3d RigidBody::getOmegaDot(){
   return OmegaDot;
 }
 
-VectorXd RigidBody::getAccel(){
+Vector3d RigidBody::getAccel(){
   return Accel;
 }
 
-VectorXd RigidBody::getVelocity(){
+Vector3d RigidBody::getVelocity(){
   return Velocity;
 }
 
 double RigidBody::getTheta(){
     return acos((q(0)*q(0)-q(1)*q(1)-q(2)*q(2)+q(3)*q(3))/(q(0)*q(0)+q(1)*q(1)+q(2)*q(2)+q(3)*q(3)));
+}
+
+double RigidBody::getPhi(){
+   double theta = getTheta();
+   return asin(2*(q(1)*q(3) + q(2)*q(0))/sin(theta));
+}
+
+double RigidBody::getPsi(){
+  double theta = getTheta();
+  return asin(2*(q(1)*q(3) - q(2)*q(0))/sin(theta));
 }
