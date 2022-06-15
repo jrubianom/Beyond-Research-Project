@@ -1,0 +1,3 @@
+order           Size            NE              GradError       hmin             hmax            kmin            kmax 
+         1               18362           36216           0.5900883155    0.3529846885    0.5802280072    1               1.747283747     
+               

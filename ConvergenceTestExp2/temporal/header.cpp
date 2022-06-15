@@ -69,7 +69,7 @@ void SaveInParaView(flowParameters &FP,Mesh *mesh,
                     GridFunction &Gradx,GridFunction &Grad_exact_sol){
 
    ParaViewDataCollection paraview_dc(FP.nameFile(), mesh);
-   paraview_dc.SetPrefixPath("/media/sf_Paraview_samples/23-05-2022-Exps/Exp2");
+   paraview_dc.SetPrefixPath("DiferentOrdersPV");
    paraview_dc.SetLevelsOfDetail(FP.order);
    paraview_dc.SetCycle(0);
    paraview_dc.SetDataFormat(VTKFormat::BINARY);
